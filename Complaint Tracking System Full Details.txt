@@ -1,0 +1,200 @@
+                                                +------------------------------------------------+
+                                                | Complaint Tracker System Project Full Details  |
+                                                +------------------------------------------------+
+
+I.Create table Queries for all the tables that were used in the complaint tracker project 
+
+
+DATABASE NAME : complaint
+
+
+1) Table Name : complaint
+ 
+CREATE TABLE complaint (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT DEFAULT NULL,
+    resolved_by_id INT DEFAULT NULL,
+    department VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    complaint_type VARCHAR(100) NOT NULL,
+    description VARCHAR(350) NOT NULL,
+    issue_raise_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    complain_status ENUM('done','wip','overdue') NOT NULL,
+    due_date TIMESTAMP NOT NULL,
+    tat INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    name VARCHAR(255) NOT NULL,
+    status ENUM('pending','work in progress','resolved','overdue') DEFAULT 'pending',
+    resolution TEXT DEFAULT NULL,
+    assigned_to INT DEFAULT NULL,
+    updated_due_date TIMESTAMP DEFAULT NULL,
+    reason TEXT DEFAULT NULL
+);
+ 
+
+2) Table Name : complaint_history
+
+CREATE TABLE complaint_history (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    complaint_id INT NOT NULL,
+    user_id INT DEFAULT NULL,
+    resolved_by_id INT DEFAULT NULL,
+    department VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    complaint_type VARCHAR(100) NOT NULL,
+    description VARCHAR(350) NOT NULL,
+    issue_raise_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    complain_status ENUM('done','wip','overdue') NOT NULL,
+    due_date TIMESTAMP NOT NULL,
+    tat INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    name VARCHAR(255) NOT NULL,
+    status ENUM('pending','work in progress','resolved','overdue') DEFAULT 'pending',
+    resolution TEXT DEFAULT NULL,
+    assigned_to INT DEFAULT NULL,
+    updated_due_date TIMESTAMP DEFAULT NULL,
+    reason TEXT DEFAULT NULL,
+    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    change_action ENUM('INSERT', 'UPDATE') NOT NULL
+);
+ 
+
+3) Table Name : complaint_type_master
+ 
+CREATE TABLE complaint_type_master (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    complaint_type VARCHAR(255) NOT NULL UNIQUE,
+    department VARCHAR(255) DEFAULT NULL,
+    tat INT DEFAULT NULL
+);
+ 
+
+4) Table Name : deleted_users
+ 
+CREATE TABLE deleted_users (
+    id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(255) DEFAULT NULL,
+    department VARCHAR(100) DEFAULT NULL,
+    location VARCHAR(100) DEFAULT NULL,
+    email VARCHAR(255) DEFAULT NULL,
+    emp_code VARCHAR(50) DEFAULT NULL,
+    emp_level ENUM('L0', 'L1', 'L2') DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT NULL
+);
+ 
+ 
+5) Table Name : department_master 
+
+CREATE TABLE department_master (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    department VARCHAR(255) NOT NULL UNIQUE
+);
+ 
+ 
+6) Table Name : email_master
+ 
+CREATE TABLE email_master (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    department VARCHAR(255) NOT NULL,
+    complaint TEXT NOT NULL,
+    message TEXT DEFAULT NULL
+);
+ 
+ 
+7) Table Name : location_master
+
+CREATE TABLE location_master (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    location VARCHAR(255) NOT NULL UNIQUE
+);
+ 
+  
+8) Table Name : office_timings
+
+CREATE TABLE office_timings (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    non_working_days VARCHAR(255) DEFAULT NULL,
+    work_start_time TIME NOT NULL,
+    work_end_time TIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+ 
+ 
+9) Table Name : public_holidays
+ 
+CREATE TABLE public_holidays (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    holiday_name VARCHAR(255) NOT NULL,
+    holiday_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+ 
+ 
+10) Table Name : status_master
+ 
+CREATE TABLE status_master (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    status VARCHAR(50) DEFAULT NULL UNIQUE
+);
+ 
+ 
+11) Table Name : user
+
+CREATE TABLE user (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) DEFAULT NULL,
+    role ENUM('superadmin', 'admin', 'user') NOT NULL,
+    department VARCHAR(100) DEFAULT NULL,
+    location VARCHAR(100) DEFAULT NULL,
+    issue_raise_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('done', 'wip', 'overdue') DEFAULT NULL,
+    tat INT DEFAULT NULL,
+    due_date TIMESTAMP DEFAULT NULL,
+    emp_code VARCHAR(50) DEFAULT NULL,
+    full_name VARCHAR(255) DEFAULT NULL,
+    email VARCHAR(255) DEFAULT NULL,
+    emp_level ENUM('L0', 'L1', 'L2') DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_deleted TINYINT(1) DEFAULT 0,
+    work_start_time TIME DEFAULT NULL,
+    non_working_days ENUM('Saturday', 'Sunday', 'Both', 'None') DEFAULT NULL,
+    work_end_time TIME DEFAULT NULL,
+    holiday_dates TEXT DEFAULT NULL
+);
+
+_______________________________________________________________________________________________________________________________________________________________________
+II. Python version used in the Project 
+
+Command to get python version : python --version
+
+Python 3.11.0
+_______________________________________________________________________________________________________________________________________________________________________
+
+III. Dependencies used in our project as well as their versions.
+
+
+Libraries used in the project with their versions : 
+
+
+1) PyMySQL version == 1.1.1 (Used for connecting Python to MySQL.)
+
+2) openpyxl version == 3.1.5 (Used for reading/writing Excel files.)
+
+3) Django version == 5.1.2  (Used for building web applications.)
+
+4) python-dateutil==2.9.0.post0 (Used for parsing and manipulating dates.)
+
+5) APScheduler==3.11.0  ( Used to schedule and manage background jobs, allowing tasks to be executed at specified intervals or times.)
+
+6) django-apscheduler==0.7.0 (Integrates APScheduler with Django.)
+
+7) pytz==2024.2          (Used for timezone management.)
+
+_______________________________________________________________________________________________________________________________________________________________________
+
+
+
