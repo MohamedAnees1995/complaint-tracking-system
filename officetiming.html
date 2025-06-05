@@ -1,0 +1,474 @@
+{% extends "master.html" %}
+
+
+{% block styles %}
+<style>
+    .form-container {
+        max-width: 100vw; 
+        margin: auto;
+        padding: 30px; 
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+
+    .form-group {
+        margin-bottom: 20px;
+        width: 32%;
+    }
+
+
+    .form-group label {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+
+    .form-group input {
+        font-size: 1.1em;
+        padding: 10px;
+        height: 50px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    .form-buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+    }
+
+
+    .btn {
+        font-size: 1.1em;
+        padding: 8px 16px;
+        width: auto;
+        background-color: #0e3152;
+        color: white;
+    }
+
+
+    .table-container {
+        max-width: 100vw;
+        margin: auto;
+        margin-bottom: 40px;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: transparent;
+    }
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+
+    th, td {
+
+
+        padding: 10px;
+        text-align: left;
+    }
+
+
+    th {
+        background-color: #f4f4f4;
+        color: #333;
+        font-weight: bold;
+    }
+
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+
+    #officeHoursTable {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+
+    #officeHoursTable th, #officeHoursTable td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+
+    #officeHoursTable th {
+        background-color:rgb(245, 242, 242);
+        color: inherit;
+        cursor: pointer;
+    }
+
+
+    #officeHoursTable tr:hover {
+        background-color: #f1f1f1;
+    }
+
+
+    .action-icons {
+        display: flex;
+        gap: 10px;
+    }
+
+
+    .btn-warning {
+        background-color: #0e3457;
+        color: white;
+        border-radius: 4px;
+        
+    }
+
+
+    .btn-danger {
+        background-color: #f44336;
+        color: white;
+        border-radius: 4px;
+    }
+
+
+    .no-data {
+        text-align: center;
+        font-style: italic;
+        color: #888;
+    }
+
+
+    @media screen and (max-width: 768px) {
+        .form-group {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+
+        .form-buttons {
+            flex-direction: column;
+        }
+
+
+        #officeHoursTable th, #officeHoursTable td {
+            padding: 8px;
+        }
+
+
+        .action-icons {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+
+        .btn {
+            font-size: 12px;
+        }
+    }
+
+
+    div.dataTables_filter {
+        margin-top: -10px; 
+    }
+
+
+    div.dataTables_filter label {
+        margin-top: -5px; 
+    }
+
+
+    h2 {
+        margin-left: 30px;
+        margin-bottom: 33px;
+        font-size: 30px;
+        margin-top: -27px;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+
+    .placeholder {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        font-size: 20px;
+        transform: translateY(-50%);
+        color: #837a7a;
+        margin-top: 2px;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+
+    .form-control:focus + .placeholder {
+        display: none;  /* Hide placeholder on focus */
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h2>Manage Office Hours</h2>
+<div class="form-container">
+    <form id="officeHoursForm" method="post">
+        {% csrf_token %}
+        
+        <!-- Form Row: Non-Working Days, Office Start Time, and Office End Time -->
+        <div class="form-row">
+            <div class="form-group">
+                <input type="text" id="non_working_days" name="non_working_days" class="form-control" placeholder="Enter Non-Working Days" required>
+            </div>
+            <div class="form-group">
+                <input type="time" id="work_start_time" name="work_start_time" class="form-control" placeholder="Enter Office Start Time" required>
+                <span class="placeholder" id="start-time-placeholder">Select Time</span>
+            </div>
+            <div class="form-group">
+                <input type="time" id="work_end_time" name="work_end_time" class="form-control" placeholder="Enter Office End Time" required>
+                <span class="placeholder" id="start-time-placeholder">Select Time</span>
+            </div>
+        </div>
+
+
+        <div class="form-buttons">
+            <button type="submit" class="btn">Save Office Hours</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="table-container">
+    <div class="header-container"></div>
+
+
+    <div class="scrollable-table">
+        <table id="officeHoursTable">
+            <thead>
+                <tr>
+                    <th>Non-Working Days</th>
+                    <th>Office Start Time</th>
+                    <th>Office End Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if office_timings_data %}
+                    {% for office_timing in office_timings_data %}
+                    <tr id="office-hour-{{ office_timing.id }}">
+                        <td>{{ office_timing.non_working_days }}</td>
+                        <td>{{ office_timing.work_start_time }}</td>
+                        <td>{{ office_timing.work_end_time }}</td>
+                        <td class="action-icons">
+                            <a href="javascript:void(0);" class="btn btn-warning edit-btn" data-id="{{ office_timing.id }}" data-non-working-days="{{ office_timing.non_working_days }}" data-start-time="{{ office_timing.work_start_time }}" data-end-time="{{ office_timing.work_end_time }}">Edit</a>
+                            <a href="javascript:void(0);" class="btn btn-danger delete-btn" data-id="{{ office_timing.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="no-data">No office hours available.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+
+<!-- DataTables Buttons JS -->
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<!-- JSZip for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- PDFMake for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#officeHoursTable').DataTable({
+            "paging": true,           // Enable pagination
+            "lengthChange": true,     // Enable records per page selection
+            "searching": true,        // Enable search functionality
+            "ordering": true,         // Enable column sorting
+            "info": true,             // Show information about the current page
+            "autoWidth": false,       // Disable automatic column width adjustment
+            "pageLength": 5,         // Set default records per page to 10
+            "lengthMenu": [3,5, 10, 25, 50, 100], // Set the records per page options
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let editingOfficeHourId = null; // Track the record being edited
+        const addUrl = "{% url 'manage_office_timings' %}";  // URL to add new office timing
+        const editUrl = "{% url 'edit_office_timing' 0 %}"; // URL for editing office timing
+        const deleteUrl = "{% url 'delete_office_timing' 0 %}"; // URL for deleting office timing
+
+
+        // Handle Edit Button Click
+        function handleEditButtonClick(event) {
+            const button = event.target;
+            editingOfficeHourId = button.dataset.id;
+            const nonWorkingDays = button.dataset.nonWorkingDays;
+            const startTime = button.dataset.startTime;
+            const endTime = button.dataset.endTime;
+
+
+            // Populate the form with the selected data for editing
+            document.getElementById("non_working_days").value = nonWorkingDays;
+            document.getElementById("work_start_time").value = startTime;
+            document.getElementById("work_end_time").value = endTime;
+            document.querySelector(".form-buttons button[type='submit']").textContent = "Update Office Hours";
+        }
+
+
+        // Attach event listener to dynamically added edit buttons
+        document.querySelector("#officeHoursTable").addEventListener("click", function(event) {
+            if (event.target.classList.contains('edit-btn')) {
+                handleEditButtonClick(event);
+            }
+        });
+
+
+        // Handle Delete Button Click
+        function handleDeleteButtonClick(event) {
+            const button = event.target;
+            const officeHourId = button.dataset.id;
+            const deleteUrlWithId = deleteUrl.replace('0', officeHourId);
+
+
+            fetch(deleteUrlWithId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the deleted row from the table
+                    document.querySelector(`#office-hour-${officeHourId}`).remove();
+                } else {
+                    alert('Error deleting office hour');
+                }
+            });
+        }
+
+
+        // Attach event listener to dynamically added delete buttons
+        document.querySelector("#officeHoursTable").addEventListener("click", function(event) {
+            if (event.target.classList.contains('delete-btn')) {
+                handleDeleteButtonClick(event);
+            }
+        });
+
+
+        // Form Submit (Add or Update Office Hours)
+        document.getElementById("officeHoursForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const nonWorkingDays = document.getElementById("non_working_days").value;
+            const startTime = document.getElementById("work_start_time").value;
+            const endTime = document.getElementById("work_end_time").value;
+
+
+            let url = addUrl;  // Default URL to Add new office hours
+            let method = 'POST'; // Default method for adding
+
+
+            if (editingOfficeHourId) {
+                // If editing, switch to the edit URL
+                url = editUrl.replace('0', editingOfficeHourId);
+                method = 'POST'; // Change to PUT for editing if necessary (depending on your backend setup)
+            }
+
+
+            // Send the request to Add or Edit
+            fetch(url, {
+                method: method,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ non_working_days: nonWorkingDays, work_start_time: startTime, work_end_time: endTime })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (editingOfficeHourId) {
+                        // If editing, update the row in the table
+                        const row = document.querySelector(`#office-hour-${editingOfficeHourId}`);
+                        row.querySelector("td:first-child").textContent = nonWorkingDays;
+                        row.querySelector("td:nth-child(2)").textContent = startTime;
+                        row.querySelector("td:nth-child(3)").textContent = endTime;
+                    } else {
+                        // If adding, insert a new row to the table
+                        const newRow = `
+                            <tr id="office-hour-${data.office_timing.id}">
+                                <td>${nonWorkingDays}</td>
+                                <td>${startTime}</td>
+                                <td>${endTime}</td>
+                                <td class="action-icons">
+                                    <a href="javascript:void(0);" class="btn btn-warning edit-btn" data-id="${data.office_timing.id}" data-non-working-days="${nonWorkingDays}" data-start-time="${startTime}" data-end-time="${endTime}">Edit</a>
+                                    <a href="javascript:void(0);" class="btn btn-danger delete-btn" data-id="${data.office_timing.id}">Delete</a>
+                                </td>
+                            </tr>`;
+                        document.querySelector("#officeHoursTable tbody").insertAdjacentHTML("beforeend", newRow);
+                    }
+
+
+                    // Reset form
+                    document.getElementById("non_working_days").value = '';
+                    document.getElementById("work_start_time").value = '';
+                    document.getElementById("work_end_time").value = '';
+                    document.querySelector(".form-buttons button[type='submit']").textContent = "Save Office Hours";
+                    editingOfficeHourId = null; // Reset editing ID
+                } else {
+                    alert('Error occurred, please try again');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
