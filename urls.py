@@ -77,6 +77,7 @@ urlpatterns = [
     path('edit_signature/<int:id>/',views.edit_signature, name='editsignature'),
     path('delete_signature/<int:id>/',views.delete_signature, name='deletesignature'),
     path('upload/', views.upload_image, name='upload_image'),
+    path('check-username/', views.check_username, name='check_username'),
     
 ]
 
