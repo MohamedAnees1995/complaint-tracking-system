@@ -192,7 +192,7 @@
 {% endblock %}
 
 
-{% block scripts %}
+{% block script %}
 <script>
     // Function to set the current date and time in IST
     function setFixedDateTimeToIST() {
@@ -219,6 +219,34 @@
 
     // Call the function to set the current date and time
     setFixedDateTimeToIST();
+
+
+    $(document).ready(function () {
+    $('#name').on('input', function () {
+        var username = $(this).val().trim();
+        if (username.length > 0) {
+            $.ajax({
+                url: "{% url 'check_username' %}",
+                data: { 'name': username },
+                dataType: 'json',
+                success: function (data) {
+                    $('#name-warning').remove();
+                    if (data.exists) {
+                        $('<span id="name-warning" style="color: red;">User already exists!</span>')
+                            .insertAfter('#name');
+                        $('button[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('#name-warning').remove();
+                        $('button[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+        } else {
+            $('#name-warning').remove();
+            $('button[type="submit"]').prop('disabled', false);
+        }
+    });
+});
 </script>
 {% endblock %}
 
