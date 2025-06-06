@@ -2166,6 +2166,20 @@ def adduser(request):
     finally:
         cur.close()
         db.close()
+
+def check_username(request):
+    if request.method == "GET":
+        name = request.GET.get('name')
+        cur, db = connection()
+        try:
+            cur.execute("SELECT COUNT(*) FROM user WHERE name = %s", (name,))
+            exists = cur.fetchone()[0] > 0
+            return JsonResponse({'exists': exists})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        finally:
+            cur.close()
+            db.close()
         
 # def edit(request):
 #     return render(request,'edit.html')
