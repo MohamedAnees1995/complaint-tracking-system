@@ -1,0 +1,50 @@
+CREATE TABLE escalationmatrix (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    location VARCHAR(100) NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    levels VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE escalationmatrix1 (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    location VARCHAR(100) NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    level VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE office_timings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    non_working_days ENUM('Saturday', 'Sunday', 'Both') NOT NULL,
+    work_start_time TIME NOT NULL,
+    work_end_time TIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    location VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    password VARCHAR(100),
+    role VARCHAR(50),
+    department VARCHAR(100),
+    location VARCHAR(100),
+    issue_raise_date DATETIME,
+    status VARCHAR(50),
+    tat INT,
+    due_date DATE,
+    emp_code VARCHAR(50),
+    full_name VARCHAR(100),
+    email VARCHAR(150),
+    emp_level VARCHAR(10),
+    created_at DATETIME,
+    date DATETIME,
+    is_deleted TINYINT(1) DEFAULT 0,
+    non_working_days VARCHAR(50),
+    work_start_time TIME,
+    work_end_time TIME,
+    holiday_dates TEXT,
+    levels VARCHAR(10)
+);
